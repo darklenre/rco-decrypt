@@ -1,0 +1,5 @@
+{
+  "imageDecryptEval": "const matches=[..._encryptedString.matchAll(/(cdk|pth)\\s*=\\s*['\"](.*?)['\"]\\s*;?/gs)];const pageLinks=new Array;matches.forEach((s=>{if(s[2])pageLinks.push(decryptLink(s[2]))}));function decryptLink(s){let t=s.replace(/\\w{5}__\\w{3}__/g,\"g\").replace(/\\w{2}__\\w{6}_/g,\"a\").replace(/b/g,\"pw_.g28x\").replace(/h/g,\"d2pr.x_27\").replace(/pw_.g28x/g,\"b\").replace(/d2pr.x_27/g,\"h\");if(!t.startsWith(\"https\")){const s=t.indexOf(\"?\");const e=t.substring(s);const n=t.includes(\"=s0?\");const c=n?t.indexOf(\"=s0?\"):t.indexOf(\"=s1600?\");let r=t.substring(0,c);r=r.substring(15,33)+r.substring(50);const g=r.length;r=r.substring(0,g-11)+r[g-2]+r[g-1];const p=atob(r);let i=decodeURIComponent(p);i=i.substring(0,13)+i.substring(17);i=i.substring(0,i.length-2)+(n?\"=s0\":\"=s1600\");t=`https://2.bp.blogspot.com/${i}${e}`}return t}pageLinks;",
+  "postDecryptEval": null,
+  "shouldVerifyLinks": false
+}
