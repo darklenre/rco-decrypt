@@ -2,6 +2,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
 import { minify_sync } from "terser";
+import JavaScriptObfuscator from 'javascript-obfuscator';
 
 const dirPath = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,7 +14,7 @@ const endMarker = "// Code End";
 const decryptEval = getJavaScript("rcoDecrypt.js");
 const postDecryptEval = getJavaScript("rcoPostDecrypt.js");
 const shouldVerify = false;
-const shouldObfuscate = false;
+const shouldObfuscate = true;
 const fileName = "output.json";
 
 function getJavaScript(file) {
@@ -34,11 +35,30 @@ function getFinalJavaScript(js) {
     }
 
     if (!shouldObfuscate) {
-        return minify_sync(js, {compress: {directivess: false}}).code;
+        return minify_sync(js, {compress: {defaults: false}}).code;
     }
 
-    // Logic for obfuscation
-    return null;
+    // Logic for obfuscation, So scuffed
+    const obfuscationResult = JavaScriptObfuscator.obfuscate(js, {
+        target: "node",
+        compact: true,
+        simplify: true,
+        renameProperties: true,
+        stringArrayCallsTransform: true,
+        stringArrayCallsTransformThreshold: 1,
+        stringArray: true,
+        stringArrayRotate: true,
+        stringArrayShuffle: true,
+        stringArrayWrappersCount: 4,
+        stringArrayWrappersParametersMaxCount: 2,
+        stringArrayWrappersChainedCalls: true,
+        splitStrings: true,
+        splitStringsChunkLength: 3,
+        stringArrayThreshold: 0.75,
+        stringArrayIndexShift: true
+    });
+
+    return obfuscationResult.getObfuscatedCode();
 }
 
 const jsonData = {
