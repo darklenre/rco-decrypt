@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import { minify_sync } from "terser";
 import JavaScriptObfuscator from 'javascript-obfuscator';
+import "dotenv/config"
 
 const dirPath = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,9 +14,9 @@ const endMarker = "// Code End";
 // Params
 const decryptEval = getJavaScript("rcoDecrypt.js");
 const postDecryptEval = getJavaScript("rcoPostDecrypt.js");
-const shouldVerify = false;
-const shouldObfuscate = true;
-const fileName = "output.json";
+const shouldVerify = process.env.shouldVerify == "true";
+const shouldObfuscate = process.env.shouldObfuscate == "true";
+const fileName = process.env.fileName ?? "output.json";
 
 function getJavaScript(file) {
     const filePath = path.join(dirPath, file);

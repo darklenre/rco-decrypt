@@ -8,13 +8,13 @@
   "main": "rcoDecrypt.js",
   "scripts": {
     "test": "node rcoDecrypt",
-    "test-o": "node rcoDecryptObfuscated",
     "gen": "node builder"
   },
   "devDependencies": {
     "javascript-obfuscator": "^4.1.1"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "terser": "^5.39.0"
   }
 }

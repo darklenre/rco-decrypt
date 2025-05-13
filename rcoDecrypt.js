@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url';
 import fs from "fs";
 import path from "path";
 
-const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "sampleScriptText.txt");
+const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "sampleScriptText.js");
 const _encryptedString = fs.readFileSync(filePath, "utf-8");
 
 // Code Start
@@ -14,6 +14,21 @@ matches.forEach((match) => {
       pageLinks.push(decryptLink(match[2]));
     }
 });
+
+function atob(input) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    let str = String(input).replace(/=+$/, '');
+    if (str.length % 4 === 1) {
+        throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
+    }
+    let output = '';
+    for (let bc = 0, bs, buffer, i = 0; (buffer = str.charAt(i++)); ~buffer &&
+        (bs = bc % 4 ? bs * 64 + buffer : buffer,
+        bc++ % 4) ? (output += String.fromCharCode(255 & bs >> (-2 * bc & 6))) : 0) {
+        buffer = chars.indexOf(buffer);
+    }
+    return output;
+}
 
 function decryptLink(encryptedString) {
   // First encryption
@@ -61,7 +76,7 @@ function decryptLink(encryptedString) {
   return result;
 }
 
-pageLinks
+JSON.stringify(pageLinks);
 // Code End
 
 console.log("Count: " + pageLinks.length)
