@@ -4,9 +4,10 @@ import path from "path";
 
 const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "sampleScriptText.js");
 const _encryptedString = fs.readFileSync(filePath, "utf-8");
+const _useServer2 = true;
 
 // Code Start
-const matches = [..._encryptedString.matchAll(/(cdk|pth|jdkv)\s*=\s*['"](.*?)['"]\s*;?/gs)];
+const matches = [..._encryptedString.matchAll(/(cdk|pht|jdkv)\s*=\s*['"](.*?)['"]\s*;?/gs)];
 const pageLinks = new Array();
 
 matches.forEach((match) => {
@@ -70,7 +71,9 @@ function decryptLink(encryptedString) {
       decodedStr.substring(0, decodedStr.length - 2) +
       (isS0 ? "=s0" : "=s1600");
 
-    result = `https://2.bp.blogspot.com/${decodedStr}${firstStringSubS}`;
+    const domain = !_useServer2 ? "https://2.bp.blogspot.com" : "https://img1.whatsnew247.net/pic";
+
+    result = `${domain}/${decodedStr}${firstStringSubS}${_useServer2 ? "&t=10" : ""}`;
   }
 
   return result;
