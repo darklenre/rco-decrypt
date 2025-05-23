@@ -6,7 +6,7 @@ const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "sample
 const _encryptedString = fs.readFileSync(filePath, "utf-8");
 
 // Code Start
-const matches = [..._encryptedString.matchAll(/(cdk|pth)\s*=\s*['"](.*?)['"]\s*;?/gs)];
+const matches = [..._encryptedString.matchAll(/(cdk|pth|jdkv)\s*=\s*['"](.*?)['"]\s*;?/gs)];
 const pageLinks = new Array();
 
 matches.forEach((match) => {
