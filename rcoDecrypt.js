@@ -9,15 +9,18 @@ const _useServer2 = false;
 // Code Start
 const varRegex = /var\s+(_[^\s=]+)\s*=\s*''\s*;/;
 const varMatch = _encryptedString.match(varRegex);
-const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
-const matches = [..._encryptedString.matchAll(pagesListRegex)];
 const pageLinks = new Array();
 
-matches.forEach((match) => {
-    if (match[2]) {
-      pageLinks.push(decryptLink(match[2]));
-    }
-});
+if (varMatch) {
+  const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+  const matches = [..._encryptedString.matchAll(pagesListRegex)];
+
+  matches.forEach((match) => {
+      if (match[2]) {
+        pageLinks.push(decryptLink(match[2]));
+      }
+  });
+}
 
 function atob(input) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
