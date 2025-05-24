@@ -4,10 +4,13 @@ import path from "path";
 
 const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "sampleScriptText.js");
 const _encryptedString = fs.readFileSync(filePath, "utf-8");
-const _useServer2 = true;
+const _useServer2 = false;
 
 // Code Start
-const matches = [..._encryptedString.matchAll(/(cdk|pht|jdkv)\s*=\s*['"](.*?)['"]\s*;?/gs)];
+const varRegex = /var\s+(_[^\s=]+)\s*=\s*''\s*;/;
+const varMatch = _encryptedString.match(varRegex);
+const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+const matches = [..._encryptedString.matchAll(pagesListRegex)];
 const pageLinks = new Array();
 
 matches.forEach((match) => {
