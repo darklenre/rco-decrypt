@@ -15,8 +15,8 @@ if (varMatch) {
   const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
   const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
-  matches.forEach((match) => {
-      if (match[2]) {
+  matches.forEach((match, index) => {
+      if (index > 0 && match[2]) {
         pageLinks.push(decryptLink(match[2]));
       }
   });
