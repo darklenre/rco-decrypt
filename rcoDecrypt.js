@@ -7,7 +7,7 @@ const _encryptedString = fs.readFileSync(filePath, "utf-8");
 const _useServer2 = false;
 
 // Code Start
-const varRegex = /var\s+(_[^\s=]+)\s*=\s*''\s*;/;
+const varRegex = /var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/;
 const varMatch = _encryptedString.match(varRegex);
 const pageLinks = new Array();
 
