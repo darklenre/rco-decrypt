@@ -12,11 +12,16 @@ const varMatch = _encryptedString.match(varRegex);
 const pageLinks = new Array();
 
 if (varMatch) {
-  const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+  // Capture ".push(" appends
+  const varMatchClean = varMatch[1].substring(0, 8);
+  const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+
+  //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
   const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
   matches.forEach((match, index) => {
-      if (index > 0 && match[2]) {
+      //if (index > 0 && match[2]) {
+      if (match[2]) {
         pageLinks.push(decryptLink(match[2]));
       }
   });
