@@ -7,24 +7,30 @@ const _encryptedString = fs.readFileSync(filePath, "utf-8");
 const _useServer2 = false;
 
 // Code Start
-const varRegex = /var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/;
-const varMatch = _encryptedString.match(varRegex);
 const pageLinks = new Array();
 
-if (varMatch) {
-  // Capture ".push(" appends
-  const varMatchClean = varMatch[1].substring(0, 8);
-  const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
+funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
 
-  //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
-  const matches = [..._encryptedString.matchAll(pagesListRegex)];
+function funniRegex(reg) {
+  const varRegex = reg;
+  const varMatch = _encryptedString.match(varRegex);
 
-  matches.forEach((match, index) => {
-      //if (index > 0 && match[2]) {
-      if (match[2]) {
-        pageLinks.push(decryptLink(match[2]));
-      }
-  });
+  if (varMatch) {
+    // Capture ".push(" appends
+    const varMatchClean = varMatch[1].substring(0, 8);
+    const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+
+    //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+    const matches = [..._encryptedString.matchAll(pagesListRegex)];
+
+    matches.forEach((match, index) => {
+        //if (index > 0 && match[2]) {
+        if (match[2]) {
+          pageLinks.push(decryptLink(match[2]));
+        }
+    });
+  }
 }
 
 function atob(input) {
@@ -90,7 +96,8 @@ function decryptLink(encryptedString) {
   return result;
 }
 
-JSON.stringify(pageLinks);
+//JSON.stringify(pageLinks);
+JSON.stringify(pageLinks.filter(item => item !== "https://2.bp.blogspot.com/pw/AP1GczP6zCVVfdmN6OoVnm7CLvEfmHMUawyEwJWouX9C6SHwsiuYfLkUr9FsM6Zo34qNzPKeQeahBx9ckBZJQckiJmX1UwKD7uh900yz5rKyG4zT2rfIrqFviEJIev1Pg_pGRuSG57rIH6BDwGCTmiE4MjA=s0"));
 // Code End
 
 console.log("Count: " + pageLinks.length)
