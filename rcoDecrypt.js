@@ -18,14 +18,14 @@ function funniRegex(reg, all = false) {
     const varMatches = [..._encryptedString.matchAll(reg)];
 
     varMatches.forEach(match => {
-      funniRegexReal(new RegExp(`var\\s+(${match[1]})\\s*=\\s*new\\s+Array\\(\\)\\s*;`));
+      funniRegexRealest(new RegExp(`var\\s+(${match[1]})\\s*=\\s*new\\s+Array\\(\\)\\s*;`));
     });
   } else {
-    funniRegexReal(reg);
+    funniRegexRealest(reg);
   }
 }
 
-function funniRegexReal(reg) {
+function funniRegexRealest(reg) {
   const varRegex = reg;
   const varMatch = _encryptedString.match(varRegex);
   
