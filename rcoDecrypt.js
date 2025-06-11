@@ -32,7 +32,6 @@ function funniRegexReal(reg) {
   if (varMatch) {
     // Capture ".push(" appends
     const varMatchClean = varMatch[1].substring(0, 8);
-    console.log(varMatchClean);
     const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
 
     //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
