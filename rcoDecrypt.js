@@ -11,14 +11,28 @@ const pageLinks = new Array();
 
 funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
 funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
+funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
-function funniRegex(reg) {
+function funniRegex(reg, all = false) {
+  if (all) {
+    const varMatches = [..._encryptedString.matchAll(reg)];
+
+    varMatches.forEach(match => {
+      funniRegexReal(new RegExp(`var\\s+(${match[1]})\\s*=\\s*new\\s+Array\\(\\)\\s*;`));
+    });
+  } else {
+    funniRegexReal(reg);
+  }
+}
+
+function funniRegexReal(reg) {
   const varRegex = reg;
   const varMatch = _encryptedString.match(varRegex);
-
+  
   if (varMatch) {
     // Capture ".push(" appends
     const varMatchClean = varMatch[1].substring(0, 8);
+    console.log(varMatchClean);
     const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
 
     //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
@@ -26,7 +40,9 @@ function funniRegex(reg) {
 
     matches.forEach((match, index) => {
         //if (index > 0 && match[2]) {
-        if (match[2]) {
+        //if (match[2]) {
+        if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
+
           pageLinks.push(decryptLink(match[2]));
         }
     });
@@ -96,12 +112,22 @@ function decryptLink(encryptedString) {
   return result;
 }
 
+var fuckedLinks = [
+  "https://2.bp.blogspot.com/pw/AP1GczP6zCVVfdmN6OoVnm7CLvEfmHMUawyEwJWouX9C6SHwsiuYfLkUr9FsM6Zo34qNzPKeQeahBx9ckBZJQckiJmX1UwKD7uh900yz5rKyG4zT2rfIrqFviEJIev1Pg_pGRuSG57rIH6BDwGCTmiE4MjA",
+];
+
+function getCleanedLinks() {
+  return pageLinks.filter(item => fuckedLinks.indexOf(item.split("=")[0]) === -1);
+}
+
 //JSON.stringify(pageLinks);
-JSON.stringify(pageLinks.filter(item => item !== "https://2.bp.blogspot.com/pw/AP1GczP6zCVVfdmN6OoVnm7CLvEfmHMUawyEwJWouX9C6SHwsiuYfLkUr9FsM6Zo34qNzPKeQeahBx9ckBZJQckiJmX1UwKD7uh900yz5rKyG4zT2rfIrqFviEJIev1Pg_pGRuSG57rIH6BDwGCTmiE4MjA=s0"));
+JSON.stringify(getCleanedLinks());
 // Code End
 
-console.log("Count: " + pageLinks.length)
+console.log("Count: " + getCleanedLinks().length);
 
-pageLinks.forEach((it, index) => {
+getCleanedLinks().forEach((it, index) => {
   console.log(`Page ${index + 1}: ${it}`)
 });
+
+//console.log("Jason: " + JSON.stringify(getCleanedLinks()));
