@@ -10,8 +10,8 @@ const _useServer2 = false;
 const pageLinks = new Array();
 
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
-funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
-//funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/);
+//funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
+funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/g, true);
 //funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
 function funniRegex(reg, all = false) {
@@ -33,16 +33,16 @@ function funniRegexRealest(reg) {
   if (varMatch) {
     // Capture ".push(" appends
     //const varMatchClean = varMatch[1].substring(0, 8);
-    //const varMatchClean = varMatch[1].substring(1, 9);
-    //const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+    const varMatchClean = varMatch[1].substring(1, 9);
+    const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
 
-    const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+    //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
     const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
     matches.forEach((match, index) => {
-        if (index > 0 && match[2]) {
+        //if (index > 0 && match[2]) {
         //if (match[2]) {
-        //if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
+        if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
 
           pageLinks.push(decryptLink(match[2]));
         }
@@ -115,10 +115,11 @@ function decryptLink(encryptedString) {
 
 var fuckedLinks = [
   "https://2.bp.blogspot.com/pw/AP1GczP6zCVVfdmN6OoVnm7CLvEfmHMUawyEwJWouX9C6SHwsiuYfLkUr9FsM6Zo34qNzPKeQeahBx9ckBZJQckiJmX1UwKD7uh900yz5rKyG4zT2rfIrqFviEJIev1Pg_pGRuSG57rIH6BDwGCTmiE4MjA",
+  "https://2.bp.blogspot.com/pw/AP1GczP48thKMga7cud0tjtHtYqsvZzhYY0HyAxVzM3O1D6tkLbi0fT9NDZFFFH69hNnoGsnqJSEIh4mmpEoU1BJSfNXIz1f5aLXl41RM9os7ePn7ipbrYbIuqiQxAV0hhJZrNLl7FmauwLQ01paCrP6KAE=s1600?ipx=1"
 ];
 
 function getCleanedLinks() {
-  return pageLinks.filter(item => fuckedLinks.indexOf(item.split("=")[0]) === -1);
+  return pageLinks.filter(item => fuckedLinks.indexOf(item) === -1);
 }
 
 //JSON.stringify(pageLinks);
