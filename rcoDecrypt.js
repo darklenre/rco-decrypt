@@ -9,9 +9,10 @@ const _useServer2 = false;
 // Code Start
 const pageLinks = new Array();
 
-funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
-funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
-funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
+//funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
+//funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
+funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/);
+//funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
 function funniRegex(reg, all = false) {
   if (all) {
@@ -31,7 +32,8 @@ function funniRegexRealest(reg) {
   
   if (varMatch) {
     // Capture ".push(" appends
-    const varMatchClean = varMatch[1].substring(0, 8);
+    //const varMatchClean = varMatch[1].substring(0, 8);
+    const varMatchClean = varMatch[1].substring(1, 9);
     const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
 
     //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
@@ -66,8 +68,8 @@ function atob(input) {
 function decryptLink(encryptedString) {
   // First encryption
   let result = encryptedString
-    .replace(/\w{5}__\w{3}__/g, "g")
-    .replace(/\w{2}__\w{6}_/g, "a")
+    //.replace(/\w{5}__\w{3}__/g, "g")
+    .replace(/\w{2}__\w{6}_/g, "d")
     .replace(/b/g, "pw_.g28x")
     .replace(/h/g, "d2pr.x_27")
     .replace(/pw_.g28x/g, "b")
