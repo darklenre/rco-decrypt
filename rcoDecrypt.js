@@ -40,9 +40,9 @@ function funniRegexRealest(reg) {
     const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
     matches.forEach((match, index) => {
-        //if (index > 0 && match[2]) {
+        if (index > 0 && match[2]) {
         //if (match[2]) {
-        if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
+        //if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
 
           pageLinks.push(decryptLink(match[2]));
         }
@@ -69,7 +69,7 @@ function decryptLink(encryptedString) {
   // First encryption
   let result = encryptedString
     //.replace(/\w{5}__\w{3}__/g, "g")
-    .replace(/\w{2}__\w{6}_/g, "d")
+    .replace(/\w{2}__\w{6}_/g, "e")
     .replace(/b/g, "pw_.g28x")
     .replace(/h/g, "d2pr.x_27")
     .replace(/pw_.g28x/g, "b")
