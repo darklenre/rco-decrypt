@@ -10,8 +10,8 @@ const _useServer2 = false;
 const pageLinks = new Array();
 
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
-//funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
-funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/);
+funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
+//funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
 function funniRegex(reg, all = false) {
@@ -33,10 +33,10 @@ function funniRegexRealest(reg) {
   if (varMatch) {
     // Capture ".push(" appends
     //const varMatchClean = varMatch[1].substring(0, 8);
-    const varMatchClean = varMatch[1].substring(1, 9);
-    const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+    //const varMatchClean = varMatch[1].substring(1, 9);
+    //const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
 
-    //const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+    const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
     const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
     matches.forEach((match, index) => {
