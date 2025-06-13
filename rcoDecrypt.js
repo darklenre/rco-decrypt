@@ -12,7 +12,7 @@ const pageLinks = new Array();
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_(?!.*mxn)[a-zA-Z0-9]+)\s*=\s*'rcoz'\s*;/);
-funniRegex(/var\s+(_(\w{8})+)\s*=\s*'rcoz'\s*;/);
+funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcoz'\s*;/);
 //funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/g, true);
 //funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
