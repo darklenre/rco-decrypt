@@ -8,27 +8,29 @@ const _useServer2 = false;
 
 // Code Start
 const pageLinks = new Array();
+const urlPattern = /^https?:\/\/(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+\b(?:[\/a-z0-9-._~:?#@!$&'()*+,;=%]*)$/i;
 
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_(?!.*mxn)[a-zA-Z0-9]+)\s*=\s*'rcoz'\s*;/);
 funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcoz'\s*;/);
+funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcox'\s*;/);
 //funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/g, true);
-//funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
+funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
 function funniRegex(reg, all = false) {
   if (all) {
     const varMatches = [..._encryptedString.matchAll(reg)];
 
     varMatches.forEach(match => {
-      funniRegexRealest(new RegExp(`var\\s+(${match[1]})\\s*=\\s*new\\s+Array\\(\\)\\s*;`));
+      funniRegexRealest(new RegExp(`var\\s+(${match[1]})\\s*=\\s*new\\s+Array\\(\\)\\s*;`), true);
     });
   } else {
     funniRegexRealest(reg);
   }
 }
 
-function funniRegexRealest(reg) {
+function funniRegexRealest(reg, captureNewArray = false) {
   const varRegex = reg;
   const varMatch = _encryptedString.match(varRegex);
   
@@ -36,18 +38,22 @@ function funniRegexRealest(reg) {
     // Capture ".push(" appends
     //const varMatchClean = varMatch[1].substring(0, 8);
     //const varMatchClean = varMatch[1].substring(1, 9);
-    //const pagesListRegex = new RegExp(`(\\b${varMatchClean}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+    let pagesListRegex;
 
-    // Captue " = "
-    const pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
-
+    if (captureNewArray) {
+      pagesListRegex = new RegExp(`(\\b${varMatch[1]}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
+    }
+    else {
+      // Capture " = "
+      pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
+    }
 
     const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
     matches.forEach((match, index) => {
-        if (index > 0 && match[2]) {
+        //if (index > 0 && match[2]) {
         //if (match[2]) {
-        //if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
+        if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
 
           pageLinks.push(decryptLink(match[2]));
         }
@@ -118,13 +124,18 @@ function decryptLink(encryptedString) {
   return result;
 }
 
-var fuckedLinks = [
+const fuckedLinks = [
   "https://2.bp.blogspot.com/pw/AP1GczP6zCVVfdmN6OoVnm7CLvEfmHMUawyEwJWouX9C6SHwsiuYfLkUr9FsM6Zo34qNzPKeQeahBx9ckBZJQckiJmX1UwKD7uh900yz5rKyG4zT2rfIrqFviEJIev1Pg_pGRuSG57rIH6BDwGCTmiE4MjA",
-  "https://2.bp.blogspot.com/pw/AP1GczP48thKMga7cud0tjtHtYqsvZzhYY0HyAxVzM3O1D6tkLbi0fT9NDZFFFH69hNnoGsnqJSEIh4mmpEoU1BJSfNXIz1f5aLXl41RM9os7ePn7ipbrYbIuqiQxAV0hhJZrNLl7FmauwLQ01paCrP6KAE=s1600?ipx=1"
+  "https://2.bp.blogspot.com/pw/AP1GczP48thKMga7cud0tjtHtYqsvZzhYY0HyAxVzM3O1D6tkLbi0fT9NDZFFFH69hNnoGsnqJSEIh4mmpEoU1BJSfNXIz1f5aLXl41RM9os7ePn7ipbrYbIuqiQxAV0hhJZrNLl7FmauwLQ01paCrP6KAE",
 ];
 
 function getCleanedLinks() {
-  return pageLinks.filter(item => fuckedLinks.indexOf(item) === -1);
+  return pageLinks.filter(item => {
+    const cleanLink = item.split("?")[0].split("=")[0]
+
+    return fuckedLinks.indexOf(cleanLink) === -1 && urlPattern.test(cleanLink);
+    //return true;
+  });
 }
 
 //JSON.stringify(pageLinks);
