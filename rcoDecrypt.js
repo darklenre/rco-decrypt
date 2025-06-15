@@ -9,12 +9,14 @@ const _useServer2 = false;
 // Code Start
 const pageLinks = new Array();
 const urlPattern = /^https?:\/\/(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+\b(?:[\/a-z0-9-._~:?#@!$&'()*+,;=%]*)$/i;
+const reverseOrder = true;
 
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_(?!.*mxn)[a-zA-Z0-9]+)\s*=\s*'rcoz'\s*;/);
 funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcoz'\s*;/);
 funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcox'\s*;/);
+funniRegex(/var\s+(_(\w{7})+)\s*=\s*''\s*;/);
 //funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/g, true);
 funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
@@ -52,8 +54,8 @@ function funniRegexRealest(reg, captureNewArray = false) {
 
     matches.forEach((match, index) => {
         //if (index > 0 && match[2]) {
-        //if (match[2]) {
-        if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
+        if (match[2]) {
+        //if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
 
           pageLinks.push(decryptLink(match[2]));
         }
@@ -127,16 +129,23 @@ function decryptLink(encryptedString) {
 const fuckedLinks = [
   "https://2.bp.blogspot.com/pw/AP1GczP6zCVVfdmN6OoVnm7CLvEfmHMUawyEwJWouX9C6SHwsiuYfLkUr9FsM6Zo34qNzPKeQeahBx9ckBZJQckiJmX1UwKD7uh900yz5rKyG4zT2rfIrqFviEJIev1Pg_pGRuSG57rIH6BDwGCTmiE4MjA",
   "https://2.bp.blogspot.com/pw/AP1GczP48thKMga7cud0tjtHtYqsvZzhYY0HyAxVzM3O1D6tkLbi0fT9NDZFFFH69hNnoGsnqJSEIh4mmpEoU1BJSfNXIz1f5aLXl41RM9os7ePn7ipbrYbIuqiQxAV0hhJZrNLl7FmauwLQ01paCrP6KAE",
-  "https://2.bp.blogspot.com/pw/AP1GczNXprTMfAP2AHFFWvCbKq6qReXrqSohz87KeBjV0nh6XoLsE1NpzL7Rp9llxoY208IPARiIDON_TO6dZB0ZMNeB8J7xzUzbS9h6To7aGpOZshFofw-wFQ0KJ3y3wolSwzLrduZZ_0w8_6gGuTEB-98"
+  "https://2.bp.blogspot.com/pw/AP1GczNXprTMfAP2AHFFWvCbKq6qReXrqSohz87KeBjV0nh6XoLsE1NpzL7Rp9llxoY208IPARiIDON_TO6dZB0ZMNeB8J7xzUzbS9h6To7aGpOZshFofw-wFQ0KJ3y3wolSwzLrduZZ_0w8_6gGuTEB-98",
+  "https://2.bp.blogspot.com/pw/AP1GczMVY_zWeag2n981CRX7jaZ73Sr0NtidtJhnvJ3-Rmh2fIo-PoQRI0ZksQEbpTjDHgBeNYbQ2hQodsY-Dv0FXUhiU_mus5z5L5lMVAH82kXYqOd2IEw"
 ];
 
 function getCleanedLinks() {
-  return pageLinks.filter(item => {
+  const cleanLinks = pageLinks.filter((item, index) => {
     const cleanLink = item.split("?")[0].split("=")[0]
 
-    return fuckedLinks.indexOf(cleanLink) === -1 && urlPattern.test(cleanLink);
+    return pageLinks.indexOf(item) === index && fuckedLinks.indexOf(cleanLink) === -1 && urlPattern.test(cleanLink);
     //return true;
   });
+
+  if (reverseOrder) {
+    return cleanLinks.reverse();
+  }
+  
+  return cleanLinks;
 }
 
 //JSON.stringify(pageLinks);
