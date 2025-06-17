@@ -19,10 +19,12 @@ const equalsRegexLookup = "var\\s+({{0}})\\s*=\\s*''\\s*;";
 const pageNewArrayRegex = "(\\b{{0}}\\s*\\.push\\(\\s*['\"])([^'\"]+)(['\"]\\s*\\))";
 const pageEqualsRegex = "({{0}})\\s*=\\s*['\"](.*?)['\"]\\s*;?";
 const pagePushRegex = "([a-zA-Z0-9]+)\\({{0}},\\s*'([^']+)'\\);";
+const pagePushRegexTriParam = "([a-zA-Z0-9]+)\\({{0}},\\s*'[^']*',\\s*'([^']+)'\\);";;
 
 funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
 funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
 funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegex);
+funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParam);
 
 // Funni memories
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
@@ -161,4 +163,6 @@ getCleanedLinks().forEach((it, index) => {
   console.log(`Page ${index + 1}: ${it}`)
 });
 
+//console.log("test area");
+//console.log(decryptLink("-yDnVZDDnEKg/Vk2UbS2x-yI/AAAAAAAAU0o/k0GEC_c2SQ0/s0-Ic42/RCO001.jpg"));
 //console.log("Jason: " + JSON.stringify(getCleanedLinks()));
