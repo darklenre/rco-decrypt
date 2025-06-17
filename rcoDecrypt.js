@@ -11,61 +11,57 @@ const pageLinks = new Array();
 const urlPattern = /^https?:\/\/(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+\b(?:[\/a-z0-9-._~:?#@!$&'()*+,;=%]*)$/i;
 const reverseOrder = false;
 
+// Regex Strings
+const replaceSymbol = "{{0}}";
+const newArrayRegexLookup = "var\\s+({{0}})\\s*=\\s*new\\s+Array\\(\\)\\s*;";
+const equalsRegexLookup = "var\\s+({{0}})\\s*=\\s*''\\s*;";
+
+const pageNewArrayRegex = "(\\b{{0}}\\s*\\.push\\(\\s*['\"])([^'\"]+)(['\"]\\s*\\))";
+const pageEqualsRegex = "({{0}})\\s*=\\s*['\"](.*?)['\"]\\s*;?";
+const pagePushRegex = "([a-zA-Z0-9]+)\\({{0}},\\s*'([^']+)'\\);";
+
+funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
+funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
+funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegex);
+
+// Funni memories
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_[^\s=]+mxn)\s*(?:=\s*[^;]+)?\s*;/);
 //funniRegex(/var\s+(_(?!.*mxn)[a-zA-Z0-9]+)\s*=\s*'rcoz'\s*;/);
 //funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcoz'\s*;/);
 //funniRegex(/var\s+(_(\w{7})+)\s*=\s*'rcox'\s*;/);
-funniRegex(/var\s+(_[^\s=]+)\s*=\s*''\s*;/g, true, true);
+//funniRegex(/var\s+(_[^\s=]+)\s*=\s*''\s*;/g, true, true);
 //funniRegex(/var\s+(c_[^\s=]+)\s*(?:=\s*[^;]+)?\s*;/g, true);
-funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
+//funniRegex(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, true);
 
-function funniRegex(reg, all = false, doAltCheck = false) {
-  if (all) {
-    const varMatches = [..._encryptedString.matchAll(reg)];
+function funniRegexReborn(reg, lookup, page) {
+  const varMatches = [..._encryptedString.matchAll(reg)];
 
-    varMatches.forEach(match => {
-      if (!doAltCheck) {
-        funniRegexRealest(new RegExp(`var\\s+(${match[1]})\\s*=\\s*new\\s+Array\\(\\)\\s*;`), true);
-      }
-      else {
-        funniRegexRealest(new RegExp(`var\\s+(${match[1]})\\s*=\\s*''\\s*;`))
-      }
-    });
-  } else {
-    funniRegexRealest(reg);
-  }
+  varMatches.forEach(match => {
+    funniRegexAntiStupidlyBlatantAdsReborn(new RegExp(toSophisticatedRegexString(match[1], lookup)), page);
+  });
 }
 
-function funniRegexRealest(reg, captureNewArray = false) {
-  const varRegex = reg;
-  const varMatch = _encryptedString.match(varRegex);
-  
-  if (varMatch) {
-    // Capture ".push(" appends
-    //const varMatchClean = varMatch[1].substring(0, 8);
-    //const varMatchClean = varMatch[1].substring(1, 9);
-    let pagesListRegex;
+function funniRegexAntiStupidlyBlatantAdsReborn(lookupRegex, page) {
+  const varMatch = _encryptedString.match(lookupRegex);
 
-    if (captureNewArray) {
-      pagesListRegex = new RegExp(`(\\b${varMatch[1]}\\s*\\.push\\(\\s*['"])([^'"]+)(['"]\\s*\\))`,'g');
-    }
-    else {
-      // Capture " = "
-      pagesListRegex = new RegExp(`(${varMatch[1]})\\s*=\\s*['"](.*?)['"]\\s*;?`, 'gs');
-    }
-
-    const matches = [..._encryptedString.matchAll(pagesListRegex)];
-
-    matches.forEach((match, index) => {
-        //if (index > 0 && match[2]) {
-        if (match[2]) {
-        //if (match[2] && match[2].indexOf("https://2.bp.blogspot.com/") === -1) {
-
-          pageLinks.push(decryptLink(match[2]));
-        }
-    });
+  if (!varMatch) {
+    return;
   }
+
+  const pagesListRegex = new RegExp(toSophisticatedRegexString(varMatch[1], page), "g");
+  const matches = [..._encryptedString.matchAll(pagesListRegex)];
+
+  matches.forEach((match) => {
+    if (match[2]) {
+      pageLinks.push(decryptLink(match[2]));
+      //pageLinks.push(decryptLink(match[2]) + "-barrier-" + varMatch[1]);
+    }
+  })
+}
+
+function toSophisticatedRegexString(varSymbol, regexString) {
+  return regexString.replace(replaceSymbol, varSymbol);
 }
 
 function atob(input) {
