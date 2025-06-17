@@ -57,7 +57,7 @@ function funniRegexAntiStupidlyBlatantAdsReborn(lookupRegex, page) {
       pageLinks.push(decryptLink(match[2]));
       //pageLinks.push(decryptLink(match[2]) + "-barrier-" + varMatch[1]);
     }
-  })
+  });
 }
 
 function toSophisticatedRegexString(varSymbol, regexString) {
