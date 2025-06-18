@@ -19,12 +19,14 @@ const equalsRegexLookup = "var\\s+({{0}})\\s*=\\s*''\\s*;";
 const pageNewArrayRegex = "(\\b{{0}}\\s*\\.push\\(\\s*['\"])([^'\"]+)(['\"]\\s*\\))";
 const pageEqualsRegex = "({{0}})\\s*=\\s*['\"](.*?)['\"]\\s*;?";
 const pagePushRegex = "([a-zA-Z0-9]+)\\({{0}},\\s*'([^']+)'\\);";
-const pagePushRegexTriParam = "([a-zA-Z0-9]+)\\({{0}},\\s*'[^']*',\\s*'([^']+)'\\);";;
+const pagePushRegexTriParam = "([a-zA-Z0-9]+)\\({{0}},\\s*'[^']*',\\s*'([^']+)'\\);";
+const pagePushRegexTriParamSecondShuffle = "([a-zA-Z0-9]+)\\(*'[^']*',\\s{{0}},\\s*'([^']+)'\\);";
 
-funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
-funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
-funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegex);
-funniRegexReborn(/var\s+(_[^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParam);
+funniRegexReborn(/var\s+([^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
+funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
+funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegex);
+funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParam);
+funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParamSecondShuffle);
 
 // Funni memories
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
@@ -91,6 +93,10 @@ function decryptLink(encryptedString) {
     .replace(/pw_.g28x/g, "b")
     .replace(/d2pr.x_27/g, "h");
 
+  if (result.endsWith("=s0") || result.endsWith("=s1600")) {
+    result = result.replace("https://2.bp.blogspot.com/", "") + "?";
+  }
+
   // Second encryption
   if (!result.startsWith("https")) {
     const queryIndex = result.indexOf("?");
@@ -140,17 +146,15 @@ const fuckedLinks = [
 
 function getCleanedLinks() {
   const cleanLinks = pageLinks.filter((item, index) => {
-    const cleanLink = item.split("?")[0].split("=")[0]
-
-    return pageLinks.indexOf(item) === index && fuckedLinks.indexOf(cleanLink) === -1 && urlPattern.test(cleanLink);
-    //return true;
+    const cleanLink = item.split("?")[0].split("=")[0];
+    const isUnique = pageLinks.findIndex(link => link.split("?")[0].split("=")[0] === cleanLink) === index;
+    const isNotBlocked = fuckedLinks.indexOf(cleanLink) === -1;
+    const matchesPattern = urlPattern.test(cleanLink);
+    
+    return isUnique && isNotBlocked && matchesPattern;
   });
 
-  if (reverseOrder) {
-    return cleanLinks.reverse();
-  }
-  
-  return cleanLinks;
+  return reverseOrder ? cleanLinks.reverse() : cleanLinks;
 }
 
 //JSON.stringify(pageLinks);
