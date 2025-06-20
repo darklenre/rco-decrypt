@@ -73,18 +73,22 @@ function findTheGoat(array) {
 
   const potentialGoat = array[0];
 
-  let elGoat = 0;
+  let zeGoat = 0;
   for (let i = 0; i < potentialGoat.length; i++) {
     const char = potentialGoat[i];
 
     if (array.every(str => str[i] === char)) {
-      elGoat++;
+      zeGoat++;
+      
+      if (zeGoat >= 5 && potentialGoat.slice(zeGoat - 5, zeGoat) === "https") {
+        return zeGoat - 5;
+      }
     } else {
-      break; 
+      break;
     }
   }
 
-  return elGoat;
+  return zeGoat;
 }
 
 function toSophisticatedRegexString(varSymbol, regexString) {
@@ -116,12 +120,12 @@ function decryptLink(encryptedString, subStrAt = 0) {
     .replace(/pw_.g28x/g, "b")
     .replace(/d2pr.x_27/g, "h");
 
-  if (result.endsWith("=s0") || result.endsWith("=s1600")) {
-    result = result.replace("https://2.bp.blogspot.com/", "") + "?";
-  }
-
   if (subStrAt != 0) {
     result = result.substr(subStrAt, result.length - subStrAt);
+  }
+
+  if (result.endsWith("=s0") || result.endsWith("=s1600")) {
+    result = result.replace("https://2.bp.blogspot.com/", "") + "?";
   }
 
   // Second encryption
