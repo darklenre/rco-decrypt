@@ -58,12 +58,33 @@ function funniRegexAntiStupidlyBlatantAdsReborn(lookupRegex, page) {
   const pagesListRegex = new RegExp(toSophisticatedRegexString(varMatch[1], page), "g");
   const matches = [..._encryptedString.matchAll(pagesListRegex)];
 
+  const array = matches.map(match => match[2]);
+  const num = findTheGoat(array);
+
   matches.forEach((match) => {
     if (match[2]) {
-      pageLinks.push(decryptLink(match[2]));
-      //pageLinks.push(decryptLink(match[2]) + "-barrier-" + varMatch[1]);
+      pageLinks.push(decryptLink(match[2], num));
     }
   });
+}
+
+function findTheGoat(array) {
+  if (array.length === 0) return 0;
+
+  const potentialGoat = array[0];
+
+  let elGoat = 0;
+  for (let i = 0; i < potentialGoat.length; i++) {
+    const char = potentialGoat[i];
+
+    if (array.every(str => str[i] === char)) {
+      elGoat++;
+    } else {
+      break; 
+    }
+  }
+
+  return elGoat;
 }
 
 function toSophisticatedRegexString(varSymbol, regexString) {
@@ -85,7 +106,7 @@ function atob(input) {
     return output;
 }
 
-function decryptLink(encryptedString) {
+function decryptLink(encryptedString, subStrAt = 0) {
   // First encryption
   let result = encryptedString
     //.replace(/\w{5}__\w{3}__/g, "g")
@@ -99,8 +120,9 @@ function decryptLink(encryptedString) {
     result = result.replace("https://2.bp.blogspot.com/", "") + "?";
   }
 
-  // kekw
-  result = result.substr(0, result.length - 3);
+  if (subStrAt != 0) {
+    result = result.substr(subStrAt, result.length - subStrAt);
+  }
 
   // Second encryption
   if (!result.startsWith("https")) {
@@ -151,6 +173,10 @@ const fuckedLinks = [
 
 function getCleanedLinks() {
   const cleanLinks = pageLinks.filter((item, index) => {
+    if (!item) {
+      return false;
+    }
+
     const cleanLink = item.split("?")[0].split("=")[0];
     const isUnique = pageLinks.findIndex(link => link.split("?")[0].split("=")[0] === cleanLink) === index;
     const isNotBlocked = fuckedLinks.indexOf(cleanLink) === -1;
