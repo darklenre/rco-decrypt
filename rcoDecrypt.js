@@ -118,7 +118,7 @@ function decryptLink(encryptedString, subStrAt = 0) {
   // First encryption
   let result = encryptedString
     //.replace(/\w{5}__\w{3}__/g, "g")
-    .replace(/\w{2}__\w{6}_/g, "e")
+    .replace(/\w{2}__\w{6}_/g, "d")
     .replace(/b/g, "pw_.g28x")
     .replace(/h/g, "d2pr.x_27")
     .replace(/pw_.g28x/g, "b")
