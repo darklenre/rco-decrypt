@@ -24,7 +24,7 @@ const pagePushRegexTriParamSecondShuffle = "([a-zA-Z0-9]+)\\(*'[^']*',\\s{{0}},\
 const pagePushRegexWeirdParamShuffle = "([^\\s(]+)\\([^,]+,[^,]+,\\s*{{0}},\\s*'([^']+)'";
 const pagePushRegexWeirdParamShuffle2 = "([^\\s(]+)\\([^,]+,[^,]+,\\s*{{0}},[^,]+,\\s*'([^']+)'";
 const pagePushRegexWeirdParamShuffle3 = "([^\\s(]+)\\(\\s*['\"].*?['\"]\\s*,\\s*['\"].*?['\"]\\s*,\\s*{{0}},\\s*['\"].*?['\"],\\s*['\"].*?['\"],\\s*'(.*?)'";
-const pagePushRegexWeirdParamShuffle4 = "([^\\s(]+)\\(\\s*{{0}},\\s*['\"].*?['\"]\\s*,\\s*['\"](.*?)['\"]";
+const pagePushRegexWeirdParamShuffle4 = "([^\\s(]+)\\(\\s*{{0}},\\s*['\"]*.*?['\"]*\\s*,\\s*['\"](.*?)['\"]";
 
 funniRegexReborn(/var\s+([^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
 funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
