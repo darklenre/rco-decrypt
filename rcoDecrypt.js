@@ -4,9 +4,8 @@ import path from "path";
 
 const filePath = path.join(path.dirname(fileURLToPath(import.meta.url)), "sampleScriptText.js");
 const _encryptedString = fs.readFileSync(filePath, "utf-8");
-const _useServer2 = false;
-
 // Code Start
+const _useServer2 = false;
 const pageLinks = new Array();
 const urlPattern = /^https?:\/\/(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)+\b(?:[\/a-z0-9-._~:?#@!$&'()*+,;=%]*)$/i;
 const reverseOrder = false;
