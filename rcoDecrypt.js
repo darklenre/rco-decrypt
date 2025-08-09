@@ -194,8 +194,7 @@ function modernDecryptLink(encryptedUrl) {
     processedUrl = processedUrl + queryString;
     
     // Reconstruct full URL
-    const domain = !_useServer2 ? "https://2.bp.blogspot.com" : "https://img1.whatsnew247.net/pic";
-    url = `${domain}/${processedUrl}${_useServer2 ? "&t=10" : ""}`;
+    url = `https://2.bp.blogspot.com/${processedUrl}`;
   }
   
   return url;
@@ -250,9 +249,7 @@ function decryptLink(encryptedString, subStrAt = 0) {
       decodedStr.substring(0, decodedStr.length - 2) +
       (isS0 ? "=s0" : "=s1600");
 
-    const domain = !_useServer2 ? "https://2.bp.blogspot.com" : "https://img1.whatsnew247.net/pic";
-
-    result = `${domain}/${decodedStr}${firstStringSubS}${_useServer2 ? "&t=10" : ""}`;
+    result = `https://2.bp.blogspot.com/${decodedStr}${firstStringSubS}`;
   }
 
   return result;
