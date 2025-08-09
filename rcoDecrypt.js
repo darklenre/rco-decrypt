@@ -73,7 +73,14 @@ function funniRegexAntiStupidlyBlatantAdsReborn(lookupRegex, page) {
 
   matches.forEach((match) => {
     if (match[2]) {
-      pageLinks.push(decryptLink(match[2], num));
+      try {
+        const decryptedUrl = decryptLink(match[2], num);
+        if (decryptedUrl) {
+          pageLinks.push(decryptedUrl);
+        }
+      } catch (error) {
+        console.error('Error decrypting URL:', error.message);
+      }
     }
   });
 }
