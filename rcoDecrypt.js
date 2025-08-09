@@ -26,15 +26,21 @@ const pagePushRegexWeirdParamShuffle2 = "([^\\s(]+)\\([^,]+,[^,]+,\\s*{{0}},[^,]
 const pagePushRegexWeirdParamShuffle3 = "([^\\s(]+)\\(\\s*['\"].*?['\"]\\s*,\\s*['\"].*?['\"]\\s*,\\s*{{0}},\\s*['\"].*?['\"],\\s*['\"].*?['\"],\\s*'(.*?)'";
 const pagePushRegexWeirdParamShuffle4 = "([^\\s(]+)\\(\\s*{{0}}\\s*,\\s*['\"]*.*?['\"]*\\s*,\\s*['\"](.*?)['\"]";
 
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegex);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParam);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParamSecondShuffle);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle2);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle3);
-funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle4);
+// Check if this is modern RCO format (contains fyrJqauwg8c function)
+if (_encryptedString.includes('fyrJqauwg8c')) {
+  parseModernRCOFormat();
+} else {
+  // Legacy format parsing
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*''\s*;/g, equalsRegexLookup, pageEqualsRegex);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pageNewArrayRegex);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegex);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParam);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexTriParamSecondShuffle);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle2);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s*new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle3);
+  funniRegexReborn(/var\s+([^\s=]+)\s*=\s+new\s+Array\(\)\s*;/g, newArrayRegexLookup, pagePushRegexWeirdParamShuffle4);
+}
 
 // Funni memories
 //funniRegex(/var\s+(_[^\s=]+mvn)\s*(?:=\s*[^;]+)?\s*;/);
@@ -114,6 +120,86 @@ function atob(input) {
         buffer = chars.indexOf(buffer);
     }
     return output;
+}
+
+function parseModernRCOFormat() {
+  // Extract encrypted URLs from modern format _n58IyuW.push(htp) pattern
+  const pushMatches = [..._encryptedString.matchAll(/_n58IyuW\.push\(htp\)/g)];
+  
+  if (pushMatches.length > 0) {
+    // Find all htp assignments before push operations
+    const htpMatches = [..._encryptedString.matchAll(/htp\s*=\s*'([^']+)'/g)];
+    
+    htpMatches.forEach(match => {
+      const encryptedUrl = match[1];
+      if (encryptedUrl && encryptedUrl.includes('In__kQUZoc_')) {
+        try {
+          const decryptedUrl = modernDecryptLink(encryptedUrl);
+          if (decryptedUrl) {
+            pageLinks.push(decryptedUrl);
+          }
+        } catch (error) {
+          console.error('Error decrypting URL:', error.message);
+        }
+      }
+    });
+  }
+}
+
+function step1(input) {
+  return input.substring(15, 15 + 18) + input.substring(15 + 18 + 17);
+}
+
+function step2(input) {
+  return input.substring(0, input.length - 11) + input[input.length - 2] + input[input.length - 1];
+}
+
+function modernDecryptLink(encryptedUrl) {
+  // Apply token replacement first
+  let url = encryptedUrl.replace(/In__kQUZoc_/g, 'd');
+  
+  // Apply character replacements
+  url = url.replace(/b/g, 'pw_.g28x').replace(/h/g, 'd2pr.x_27');
+  url = url.replace(/pw_.g28x/g, 'b').replace(/d2pr.x_27/g, 'h');
+  
+  // Only process if it doesn't start with https (encrypted)
+  if (url.indexOf('https') !== 0) {
+    let processedUrl = url;
+    let queryString = processedUrl.substring(processedUrl.indexOf('?'));
+    
+    // Handle =s0? or =s1600? variants
+    if (processedUrl.indexOf('=s0?') > 0) {
+      processedUrl = processedUrl.substring(0, processedUrl.indexOf('=s0?'));
+    } else {
+      processedUrl = processedUrl.substring(0, processedUrl.indexOf('=s1600?'));
+    }
+    
+    // Apply step1 and step2 transformations
+    processedUrl = step1(processedUrl);
+    processedUrl = step2(processedUrl);
+    
+    // Decode
+    processedUrl = decodeURIComponent(escape(atob(processedUrl)));
+    
+    // Reconstruct
+    processedUrl = processedUrl.substring(0, 13) + processedUrl.substring(17);
+    
+    // Add appropriate suffix
+    if (url.indexOf('=s0') > 0) {
+      processedUrl = processedUrl.substring(0, processedUrl.length - 2) + '=s0';
+    } else {
+      processedUrl = processedUrl.substring(0, processedUrl.length - 2) + '=s1600';
+    }
+    
+    // Add query string back
+    processedUrl = processedUrl + queryString;
+    
+    // Reconstruct full URL
+    const domain = !_useServer2 ? "https://2.bp.blogspot.com" : "https://img1.whatsnew247.net/pic";
+    url = `${domain}/${processedUrl}${_useServer2 ? "&t=10" : ""}`;
+  }
+  
+  return url;
 }
 
 function decryptLink(encryptedString, subStrAt = 0) {

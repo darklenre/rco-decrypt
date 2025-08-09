@@ -1,9 +1,13 @@
 {
   "name": "rco-decrypt",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Node.js script that generates the configuration needed for RCO (Readcomiconline) extension to work",
   "license": "ISC",
-  "author": "",
+  "author": "darklenre",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darklenre/rco-decrypt.git"
+  },
   "type": "module",
   "main": "rcoDecrypt.js",
   "scripts": {

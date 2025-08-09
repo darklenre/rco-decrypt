@@ -3,7 +3,7 @@ A Node.js script that generates the configuration needed for RCO (Readcomiconlin
 ## Getting Started
 Clone the repository:
    ```bash
-   git clone https://github.com/JakeeLuwi/rco-decrypt.git
+   git clone https://github.com/darklenre/rco-decrypt.git
    ```
 
 Install dependencies:
