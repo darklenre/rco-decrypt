@@ -137,3 +137,9 @@ dist
 
 # Project specific
 sampleScriptText.js
+.idea/.gitignore
+.idea/encodings.xml
+.idea/modules.xml
+.idea/rco-decrypt.iml
+.idea/vcs.xml
+.gitignore
